@@ -3,25 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <title>tail log</title>
-    <script src="/js/jquery.js"></script>
+    <link rel="stylesheet" href="/logView/layui/css/layui.css" media="all">
 </head>
 <body>
-<div id="log-container" style="height: 550px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+<div id="log-container" style="height: 550px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;"
+     onbeforeunload="closeWebSocket()">
     <div>
+    </div>
+</div>
+<div class="layui-row">
+    <div class="layui-col-xs3">
+        <div class="layui-form-item" style="padding-top: 10px">
+            <label class="layui-form-label">待查看文件:</label>
+            <div class="layui-input-inline">
+                <input type="text" id="filePathName" lay-verify="required" placeholder="请输入待查看文件" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs3">
+        <div style="padding-top: 10px">
+            <button class="layui-btn" id="view">查看</button>
+            <button class="layui-btn" id="close">断开</button>
+        </div>
+
+    </div>
+    <div class="layui-col-xs3">
+    </div>
+    <div class="layui-col-xs3">
     </div>
 </div>
 </body>
 <script>
-    $(document).ready(function() {
-        // 指定websocket路径
-        var websocket = new WebSocket('ws://127.0.0.1:7003/remoteLog');
-        websocket.onmessage = function(event) {
-            // 接收服务端的实时日志并添加到HTML页面中
-            $("#log-container div").append(event.data);
-            // 滚动条滚动到最低部
-            $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
-        };
-    });
+
 </script>
-</body>
+<script src="/logView/layui/layui.js"></script>
+<script>
+    var websocket = null;
+    layui.use(['layer', 'form'], function () {
+        var form = layui.form,
+            $ = layui.jquery;
+
+        if ('WebSocket' in window) {
+
+        } else {
+            window.alert("浏览器不支持WebSocket");
+            return;
+        }
+
+        $('#view').on('click', function () {
+            var filePathName = $('#filePathName')[0].value;
+            if (filePathName != "" && filePathName != undefined) {
+                open(filePathName);
+            }
+        });
+        function open(filePathName) {
+            if ('WebSocket' in window) {
+                if(websocket != null){
+                    websocket.close();
+                }
+                var url = 'ws://127.0.0.1:7003/logView/localLog?filePathName=' + filePathName;
+                websocket = new WebSocket(url);
+                websocket.onmessage = function (event) {
+                    // 接收服务端的实时日志并添加到HTML页面中
+                    $("#log-container div").append(event.data);
+                    // 滚动条滚动到最低部
+                    $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+                };
+            } else {
+                window.alert("浏览器不支持WebSocket");
+                return;
+            }
+            return false;
+        }
+
+        $('#close').on('click', function () {
+            if (websocket) {
+                websocket.close();
+                layer.msg("关闭成功!");
+            } else {
+                layer.msg("没连接WS!");
+            }
+            return false;
+        });
+    });
+    function closeWebSocket() {
+        if (websocket) {
+            websocket.close();
+            layer.msg("关闭成功!");
+        } else {
+            layer.msg("没连接WS!");
+        }
+        return false;
+    }
+</script>
 </html>

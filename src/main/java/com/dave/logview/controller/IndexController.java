@@ -13,8 +13,16 @@ public class IndexController {
     /**
      * 主页
      */
-    @RequestMapping("/")
+    @RequestMapping("/index")
     public String index(){
+        return "index";
+    }
+    @RequestMapping("/logView")
+    public String logView(){
+        return "logView";
+    }
+    @RequestMapping("/")
+    public String logView1(){
         return "logView";
     }
 }

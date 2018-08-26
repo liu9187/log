@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <link rel="stylesheet" href="/logView/layui/css/layui.css" media="all">
+    <style>
+        #jz {
+            margin: 0 auto;
+            padding-left: 200px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+<div id="jz">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>服务器登陆:</legend>
+    </fieldset>
+
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">服务器Ip:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入服务器Ip"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">端口:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" lay-verify="required" placeholder="请输入端口" autocomplete="off"
+                       class="layui-input" value="22">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="username" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">密码:</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="submit">连接</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script src="/logView/layui/layui.js"></script>
+<script>
+    layui.use(['layer', 'form'], function () {
+        var form = layui.form,
+            $ = layui.jquery;
+        //监听提交
+        form.on('submit(submit)', function (data) {
+
+            layer.alert("提交");
+            return false;
+        });
+    });
+
+</script>
+</html>
