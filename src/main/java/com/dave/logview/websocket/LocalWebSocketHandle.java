@@ -38,12 +38,16 @@ public class LocalWebSocketHandle {
             List<String> listMap = session.getRequestParameterMap().get("filePathName");
             if (null != listMap && listMap.size() > 0) {
                 String filePathName = listMap.get(0);
+                logger.info("查看日志文件："+filePathName);
                 process = Runtime.getRuntime().exec("tail -f " + filePathName);
+                session.getBasicRemote().sendText("文件已找到,等待载入......" + "<br>");
+                logger.info("文件日志找到："+filePathName);
                 inputStream = process.getInputStream();
 
                 // 一定要启动新的线程，防止InputStream阻塞处理WebSocket的线程
                 TailLogThread thread = new TailLogThread(inputStream, session);
                 thread.start();
+                logger.info("查看线程启动："+thread.getName());
             }else{
                 session.getBasicRemote().sendText("文件名称没有找到" + "<br>");
             }

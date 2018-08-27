@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/logView/layui/css/layui.css" media="all">
 </head>
 <body>
-<div id="log-container" style="height: 550px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;"
+<div id="log-container" style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;"
      onbeforeunload="closeWebSocket()">
     <div>
     </div>
@@ -25,6 +25,7 @@
         <div style="padding-top: 10px">
             <button class="layui-btn" id="view">查看</button>
             <button class="layui-btn" id="close">断开</button>
+            <button class="layui-btn" id="clear">清理</button>
         </div>
 
     </div>
@@ -62,7 +63,7 @@
                 if(websocket != null){
                     websocket.close();
                 }
-                var url = 'ws://127.0.0.1:7003/logView/localLog?filePathName=' + filePathName;
+                var url = 'ws://47.96.100.142/logView/localLog?filePathName=' + filePathName;
                 websocket = new WebSocket(url);
                 websocket.onmessage = function (event) {
                     // 接收服务端的实时日志并添加到HTML页面中
@@ -84,6 +85,11 @@
             } else {
                 layer.msg("没连接WS!");
             }
+            return false;
+        });
+
+        $('#clear').on('click', function () {
+            $("#log-container div").html('');;
             return false;
         });
     });
