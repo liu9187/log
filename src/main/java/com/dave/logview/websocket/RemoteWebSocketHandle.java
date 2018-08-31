@@ -18,10 +18,13 @@ import java.io.InputStream;
 /**
  * wwj
  * 2018/8/24  17:56
+ * 远程 SSH 访问日志的功能不弄了
+ *   因为有了服务器的密码 我就可以直接连了
+ *   就是因为没有服务器访问的权限还要看日志的情况下，才做这个功能
  */
 
-@Component
-@ServerEndpoint("/remoteLog")
+//@Component
+//@ServerEndpoint("/remoteLog")
 public class RemoteWebSocketHandle {
 
     private static Logger logger = LoggerFactory.getLogger(RemoteWebSocketHandle.class);
@@ -36,10 +39,11 @@ public class RemoteWebSocketHandle {
     @OnOpen
     public void onOpen(javax.websocket.Session session) {
         try {
-            String hostname = "47.96.100.142";
+            /** */
+            String hostname = "";
             int port = 22;
-            String username = "dave";
-            String password = "COMEon1995";
+            String username = "";
+            String password = "";
 
             conn = new Connection(hostname, port);
             //连接到主机
@@ -51,7 +55,7 @@ public class RemoteWebSocketHandle {
             } else {
                 session.getBasicRemote().sendText(hostname + "：连接成功!" + "<br>");
                 ssh = conn.openSession();
-                ssh.execCommand("tail -f /home/dave/es/nohup.out");
+                ssh.execCommand("tail -f "+"");
                 InputStream inputStream = new StreamGobbler(ssh.getStdout());
                 TailLogThread thread = new TailLogThread(inputStream, session);
                 thread.start();

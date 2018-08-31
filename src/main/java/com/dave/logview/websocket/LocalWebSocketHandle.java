@@ -34,7 +34,7 @@ public class LocalWebSocketHandle {
     public void onOpen(Session session) {
         try {
             // 执行tail -f命令
-            ///home/dave/es/nohup.out
+            ///home/root/project/nohup.out
             List<String> listMap = session.getRequestParameterMap().get("filePathName");
             if (null != listMap && listMap.size() > 0) {
                 String filePathName = listMap.get(0);

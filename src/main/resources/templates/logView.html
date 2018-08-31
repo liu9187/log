@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <div id="fileRoot" style="visibility: hidden" class="layui-col-sm3">
+    <div id="fileRoot" class="layui-col-sm3">
         <div style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
             <div style="display:grid">
                 <button id="back" class="layui-btn layui-btn-sm">
@@ -107,7 +107,7 @@
                 if (websocket != null) {
                     websocket.close();
                 }
-                var url = 'ws://47.96.100.142/logView/localLog?filePathName=' + filePathName;
+                var url = 'ws://127.0.0.1:7003/logView/localLog?filePathName=' + filePathName;
                 websocket = new WebSocket(url);
                 websocket.onmessage = function (event) {
                     // 接收服务端的实时日志并添加到HTML页面中
