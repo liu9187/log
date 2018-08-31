@@ -1,5 +1,7 @@
 package com.dave.logview.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
 
+    private static Logger logger = LoggerFactory.getLogger(IndexController.class);
+
     /**
      * 主页
      */
@@ -17,12 +21,12 @@ public class IndexController {
     public String index(){
         return "index";
     }
-    @RequestMapping("/logView")
-    public String logView(){
-        return "logView";
-    }
     @RequestMapping("/")
-    public String logView1(){
-        return "logView";
+    public String logView(){
+        logger.info("当前系统："+System.getProperty("os.name"));
+        if(System.getProperty("os.name").toLowerCase().indexOf("linux") >= 0){
+            return "logView";
+        }
+        return "logViewWindows";
     }
 }

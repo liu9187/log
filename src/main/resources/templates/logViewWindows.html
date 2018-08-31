@@ -7,14 +7,14 @@
 </head>
 <body>
 <div class="layui-row">
-    <div class="layui-col-sm9">
+    <div  id = "logView" class="layui-col-sm9">
         <div id="log-container" style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;"
              onbeforeunload="closeWebSocket()">
             <div>
             </div>
         </div>
     </div>
-    <div id="fileRoot" style="visibility: hidden" class="layui-col-sm3">
+    <div id="fileRoot" style="visibility: visible" class="layui-col-sm3">
         <div style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
             <div style="display:grid">
                 <button id="back" class="layui-btn layui-btn-sm">
@@ -44,6 +44,7 @@
             <button class="layui-btn" id="view">查看</button>
             <button class="layui-btn" id="close">断开</button>
             <button class="layui-btn" id="clear">清理</button>
+            <!--<button class="layui-btn" id="hidden">隐藏</button>-->
         </div>
 
     </div>
@@ -75,16 +76,16 @@
 
         $('#back').on('click', function () {
             var pwd = $('#pwd').val();
-            var pwdArray = pwd.split("/");
+            var pwdArray = pwd.split("\\");
             pwdArray.splice(pwdArray.length - 1, 1);
             var backPwd;
             pwdArray.forEach(function (value, i) {
                 if (i == 0) {
-                    backPwd = "/" + value;
-                } else if (backPwd == "/") {
+                    backPwd = value;
+                } else if (backPwd == "\\") {
                     backPwd = backPwd + value;
                 } else {
-                    backPwd = backPwd + "/" + value;
+                    backPwd = backPwd + "\\" + value;
                 }
             });
             $('#pwd').val(backPwd);
@@ -101,6 +102,16 @@
                 open(filePathName);
             }
         });
+
+        // $('#hidden').on('click', function () {
+        //     var fileRoot =  $('#fileRoot');
+        //     if( fileRoot.css("visibility") == "hidden"){
+        //         $('#fileRoot').css("visibility","visible");
+        //     }else{
+        //         fileRoot.css("visibility","hidden");
+        //     }
+        // });
+
 
         function open(filePathName) {
             if ('WebSocket' in window) {
@@ -134,7 +145,6 @@
 
         $('#clear').on('click', function () {
             $("#log-container div").html('');
-            ;
             return false;
         });
     });
@@ -152,7 +162,7 @@
     function enter(e) {
         var pwd = $('#pwd').val();
         var params ={};
-        params.pathDir=pwd+'/'+e.text;
+        params.pathDir=pwd+'\\'+e.text;
         listFilePost("/logView/fileShow/listDir",params);
     }
 
