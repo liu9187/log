@@ -47,7 +47,6 @@ public class LocalWebSocketHandle {
                 // 一定要启动新的线程，防止InputStream阻塞处理WebSocket的线程
                 TailLogThread thread = new TailLogThread(inputStream, session);
                 thread.start();
-                logger.info("查看线程启动："+thread.getName());
             }else{
                 session.getBasicRemote().sendText("文件名称没有找到" + "<br>");
             }

@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * wwj
@@ -52,16 +49,18 @@ public class FileShowController {
             //开始遍历
             File file = new File(filedir);
             File[] fs = file.listFiles();
-            for (File f : fs) {
-                if(f.getName().startsWith(".")){
-                    //隐藏文件 暂不显示
-                    continue;
-                }
-                if (f.isDirectory()) {
-                    directorys.add(f.getName());
-                }
-                if (f.isFile()) {
-                    files.add(f.getName());
+            if(fs != null && fs.length > 0){
+                for (File f : fs) {
+                    if(f.getName().startsWith(".")){
+                        //隐藏文件 暂不显示
+                        continue;
+                    }
+                    if (f.isDirectory()) {
+                        directorys.add(f.getName());
+                    }
+                    if (f.isFile()) {
+                        files.add(f.getName());
+                    }
                 }
             }
             logger.info("目标路径：" + filedir + ",遍历完成!");
