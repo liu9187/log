@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <link rel="stylesheet" href="/logView/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;text-align:center">
+    <legend>请选择</legend>
+</fieldset>
+
+<div style="padding: 30px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15" style="text-align:center">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">测试DMZ日志访问(122)</div>
+                <div class="layui-card-body">
+                    <img src="/logView/images/index/left.jpg"/><br>
+                    <button id="left" class="layui-btn" style="width: 198px">进入</button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">测试内网日志访问(200)</div>
+                <div class="layui-card-body">
+                    <img src="/logView/images/index/right.jpg"/><br>
+                    <button id="right" class="layui-btn" style="width: 198px">进入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--跑动的小人-->
+<div class="layui-col-md12">
+    <canvas id="people" style="border:1px solid #ddd;"></canvas>
+</div>
+</body>
+<script src="/logView/layui/layui.js"></script>
+<script type="text/javascript" src="/logView/js/jquery.js"></script>
+<script type="text/javascript" src="/logView/js/people.js"></script>
+<script>
+
+    (function () {
+        // canvas
+        var canvas = document.getElementById('people');
+        var ctx = canvas.getContext('2d');
+
+        //player base
+        var playerImage = new Image();
+        playerImage.src = '/logView/images/index/go.png';
+        var player = {
+            x: 50,       // 在canvas中的坐标
+            y: 0,
+            imageX: 0,  // 图像定位坐标
+            imageY: 0,
+            width: 50,  // 图像显示区域大小
+            height: 60,
+            stop: true  // 是否停止
+        };
+
+        function clean() {
+            // clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function playerInit() {
+            // init player
+            playerImage.onload = _drawPlayer;
+        }
+
+        function playerMove(value) {
+            if ('right' === value) {
+                // move right
+                if (player.stop) {
+                    player.imageX += 50;
+                } else {
+                    player.imageX = 0;
+                }
+                if (player.imageX >= 150) {
+                    player.imageX = 0;
+                }
+                ;
+                // player move speed
+                player.x += 5;
+                player.imageY = 0;
+
+            } else if ('left' === value) {
+                // move left
+                if (player.stop) {
+                    player.imageX += 50;
+                } else {
+                    player.imageX = 0;
+                }
+                if (player.imageX >= 150) {
+                    player.imageX = 0;
+                }
+                ;
+                // player move speed
+                player.x -= 5;
+                player.imageY = 60;
+            }
+            ;
+
+            clean();
+            _drawPlayer();
+        }
+
+        function playerJump(value) {
+        //
+        }
+
+        function _drawPlayer() {
+            // draw player image
+            ctx.drawImage(playerImage, player.imageX, player.imageY, player.width, player.height, player.x, canvas.height - player.height, player.width, player.height);
+        }
+
+        function playerAction(value) {
+            var posX = 0;
+            var posY = 0;
+            // console.log(player.x);
+            switch (value) {
+                case 'up':
+                    playerJump();
+                    break;
+                case 'right':
+                    posX = player.x + player.width;
+                    if (posX >= canvas.width) {
+                        return;
+                    }
+                    ;
+                    //player.x += 5;
+                    playerMove(value);
+                    break;
+                case 'down':
+                    break;
+                case 'left':
+                    if (player.x < 5) {
+                        return;
+                    }
+                    ;
+                    //player.x -= 5;
+                    playerMove(value);
+                    break;
+            }
+            ;
+            // console.log(player.x);
+            return {x: player.x, y: player.y};
+        }
+
+        //init canvas
+
+        var init = (function (options) {
+            options = options || {};
+            canvas.width = options.width || 500;
+            canvas.height = options.height || 300;
+
+            //init draw rect
+            playerInit();
+
+            //bind user event
+            eventjs.bind(document, 'keydown', function (event) {
+                var d = eventjs.getDirection(event);
+                player.stop = true;
+                playerAction(d);
+            });
+            eventjs.bind(document, 'keyup', function (event) {
+                var d = eventjs.getDirection(event);
+                player.stop = false;
+                playerAction(d);
+            });
+        })({width:window.screen.width-10, height: 130});
+    })();
+
+    $("#left").click(function(){
+        window.location.href = "/logView/view";
+    });
+    $("#right").click(function(){
+        // window.location.href = "/logView/index";
+        alert("还没开发完毕！");
+    });
+
+
+
+</script>
+</html>
