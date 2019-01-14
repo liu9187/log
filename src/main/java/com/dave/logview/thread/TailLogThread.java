@@ -1,4 +1,4 @@
-package com.dave.logview.Thread;
+package com.dave.logview.thread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,15 +35,15 @@ public class TailLogThread extends Thread {
                 // 将实时日志通过WebSocket发送给客户端，给每一行添加一个HTML换行
                 session.getBasicRemote().sendText(line + "<br>");
             }
-        }catch (EOFException e1){
+        } catch (EOFException e1) {
             try {
                 session.getBasicRemote().sendText("客户端已经关闭!" + "<br>");
             } catch (Exception e) {
-                logger.error("服务流关闭提示消息发送报错："+e.getMessage(), e);
+                logger.error("服务流关闭提示消息发送报错：" + e.getMessage(), e);
             }
             logger.info("出现了EOFExcption:：服务流已经关闭!");
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
         }
     }
 }

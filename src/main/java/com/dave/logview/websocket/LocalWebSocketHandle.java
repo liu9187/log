@@ -1,6 +1,6 @@
 package com.dave.logview.websocket;
 
-import com.dave.logview.Thread.TailLogThread;
+import com.dave.logview.thread.TailLogThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,6 +10,7 @@ import javax.websocket.OnError;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -38,17 +39,22 @@ public class LocalWebSocketHandle {
             List<String> listMap = session.getRequestParameterMap().get("filePathName");
             if (null != listMap && listMap.size() > 0) {
                 String filePathName = listMap.get(0);
-                logger.info("查看日志文件："+filePathName);
-                process = Runtime.getRuntime().exec("tail -f " + filePathName);
-                session.getBasicRemote().sendText("文件已找到,等待载入......" + "<br>");
-                logger.info("文件日志找到："+filePathName);
-                inputStream = process.getInputStream();
-
-                // 一定要启动新的线程，防止InputStream阻塞处理WebSocket的线程
-                TailLogThread thread = new TailLogThread(inputStream, session);
-                thread.start();
-            }else{
-                session.getBasicRemote().sendText("文件名称没有找到" + "<br>");
+                logger.info("查看日志文件：" + filePathName);
+                //查看日志是否存在
+                File file = new File(filePathName);
+                if(file.exists()){
+                    process = Runtime.getRuntime().exec("tail -f " + filePathName);
+                    session.getBasicRemote().sendText("等待载入文件......" + "<br>");
+                    logger.info("文件日志找到：" + filePathName);
+                    inputStream = process.getInputStream();
+                    // 一定要启动新的线程，防止InputStream阻塞处理WebSocket的线程
+                    TailLogThread thread = new TailLogThread(inputStream, session);
+                    thread.start();
+                }else{
+                    session.getBasicRemote().sendText("<a style='color: #ff0000'>文件没有找到</a>" + "<br>");
+                }
+            } else {
+                session.getBasicRemote().sendText("<a style='color: #ff0000'>请输入查看文件</a>" + "<br>");
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -66,12 +72,13 @@ public class LocalWebSocketHandle {
     @OnClose
     public void onClose() {
         try {
-            if (inputStream != null) {
-                inputStream.close();
-            }
             if (process != null) {
                 process.destroy();
             }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+
             logger.info("session:关闭成功!");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

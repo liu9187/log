@@ -3,15 +3,13 @@ package com.dave.logview.websocket;
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
-import com.dave.logview.Thread.TailLogThread;
+import com.dave.logview.thread.TailLogThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnOpen;
-import javax.websocket.server.ServerEndpoint;
 import java.io.InputStream;
 
 

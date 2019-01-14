@@ -4,18 +4,42 @@
     <meta charset="UTF-8">
     <title>tail log</title>
     <link rel="stylesheet" href="/logView/layui/css/layui.css" media="all">
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 </head>
-<body>
-<div class="layui-row">
-    <div  id = "logView" class="layui-col-sm9">
-        <div id="log-container" style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;"
-             onbeforeunload="closeWebSocket()">
+<body onbeforeunload="closeWebSocket()">
+<div class="layui-row" style="height: 100%">
+    <div id="logView" class="layui-col-sm9" style="height: 100%">
+        <div id="log-container" style="height:85%;overflow-y: scroll; background: #333; color: #aaa;">
             <div>
             </div>
         </div>
+
+        <!--//下半部分-->
+        <div class="layui-col-xs12" style="height: 15%;padding-top:15px;padding-left: 15px">
+            <div class="layui-form-item layui-col-xs6">
+                <label class="layui-form-label">待查看文件:</label>
+                <div class="layui-input-block">
+                    <input type="text" id="filePathName" lay-verify="required" placeholder="请输入待查看文件" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <button class="layui-btn" id="view">查看</button>
+                <button class="layui-btn" id="close">断开</button>
+                <button class="layui-btn" id="clear">清理</button>
+                <button class="layui-btn" id="hidden">隐藏</button>
+            </div>
+        </div>
     </div>
-    <div id="fileRoot" style="visibility: visible" class="layui-col-sm3">
-        <div style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+
+    <!--右-->
+    <div id="fileRoot" style="display:block;visibility: visible" class="layui-col-sm3 layui-anim layui-anim-up">
+        <div style="height: 100%; background: #333; color: #aaa; padding: 10px;">
             <div style="display:grid">
                 <button id="back" class="layui-btn layui-btn-sm">
                     <i class="layui-icon">&#xe65c;</i>
@@ -23,36 +47,14 @@
                 <input id="pwd" type="text" value="" readonly="readonly" class="layui-input">
             </div>
 
-            <div id="fileList">
+            <div id="fileList" style="overflow-y: scroll;height: 445px">
             </div>
         </div>
     </div>
+
+
 </div>
 
-<div class="layui-row">
-    <div class="layui-col-xs4">
-        <div class="layui-form-item" style="padding-top: 10px">
-            <label class="layui-form-label">待查看文件:</label>
-            <div class="layui-input-block">
-                <input type="text" id="filePathName" lay-verify="required" placeholder="请输入待查看文件" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-    </div>
-    <div class="layui-col-xs3">
-        <div style="padding-top: 10px;padding-left: 10px">
-            <button class="layui-btn" id="view">查看</button>
-            <button class="layui-btn" id="close">断开</button>
-            <button class="layui-btn" id="clear">清理</button>
-            <!--<button class="layui-btn" id="hidden">隐藏</button>-->
-        </div>
-
-    </div>
-    <div class="layui-col-xs3">
-    </div>
-    <div class="layui-col-xs2">
-    </div>
-</div>
 </body>
 <script>
 
@@ -90,9 +92,9 @@
             });
             $('#pwd').val(backPwd);
             var pwd = $('#pwd').val();
-            var params ={};
-            params.pathDir=pwd;
-            listFilePost("/logView/fileShow/listDir",params);
+            var params = {};
+            params.pathDir = pwd;
+            listFilePost("/logView/fileShow/listDir", params);
         });
 
 
@@ -100,17 +102,21 @@
             var filePathName = $('#filePathName')[0].value;
             if (filePathName != "" && filePathName != undefined) {
                 open(filePathName);
+            } else {
+                layer.msg("请输入查看文件");
             }
         });
 
-        // $('#hidden').on('click', function () {
-        //     var fileRoot =  $('#fileRoot');
-        //     if( fileRoot.css("visibility") == "hidden"){
-        //         $('#fileRoot').css("visibility","visible");
-        //     }else{
-        //         fileRoot.css("visibility","hidden");
-        //     }
-        // });
+        $('#hidden').on('click', function () {
+            var fileRoot = $('#fileRoot');
+            if (fileRoot.css("display") == "none") {
+                $('#fileRoot').css('display', 'block');
+                $('#logView').removeClass('layui-col-sm12').addClass('layui-col-sm9');
+            } else {
+                $('#fileRoot').css('display', 'none');
+                $('#logView').removeClass('layui-col-sm9').addClass('layui-col-sm12');
+            }
+        });
 
 
         function open(filePathName) {
@@ -161,13 +167,13 @@
 
     function enter(e) {
         var pwd = $('#pwd').val();
-        var params ={};
-        params.pathDir=pwd+'\\'+e.text;
-        listFilePost("/logView/fileShow/listDir",params);
+        var params = {};
+        params.pathDir = pwd + '\\' + e.text;
+        listFilePost("/logView/fileShow/listDir", params);
     }
 
-    function listFilePost(url,params) {
-        $.post(url,params ,function (data) {
+    function listFilePost(url, params) {
+        $.post(url, params, function (data) {
             $('#pwd').val(data.pwd);
             var files = data.files;
             var directorys = data.directorys;
@@ -190,6 +196,7 @@
                     $("#fileList").append("|- - - -<a onclick='enter(this)' style='color: #007DDB'>" + value + "</a><br/>");
                 }
             });
+            $("#fileList").append("|" + "<br/>");
         });
     }
 </script>

@@ -5,11 +5,10 @@
     <title>tail log</title>
     <link rel="stylesheet" href="/logView/layui/css/layui.css" media="all">
 </head>
-<body>
+<body onbeforeunload="closeWebSocket()">
 <div class="layui-row">
     <div class="layui-col-sm9">
-        <div id="log-container" style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;"
-             onbeforeunload="closeWebSocket()">
+        <div id="log-container" style="height: 500px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
             <div>
             </div>
         </div>
@@ -89,9 +88,9 @@
             });
             $('#pwd').val(backPwd);
             var pwd = $('#pwd').val();
-            var params ={};
-            params.pathDir=pwd;
-            listFilePost("/logView/fileShow/listDir",params);
+            var params = {};
+            params.pathDir = pwd;
+            listFilePost("/logView/fileShow/listDir", params);
         });
 
 
@@ -151,13 +150,13 @@
 
     function enter(e) {
         var pwd = $('#pwd').val();
-        var params ={};
-        params.pathDir=pwd+'/'+e.text;
-        listFilePost("/logView/fileShow/listDir",params);
+        var params = {};
+        params.pathDir = pwd + '/' + e.text;
+        listFilePost("/logView/fileShow/listDir", params);
     }
 
-    function listFilePost(url,params) {
-        $.post(url,params ,function (data) {
+    function listFilePost(url, params) {
+        $.post(url, params, function (data) {
             $('#pwd').val(data.pwd);
             var files = data.files;
             var directorys = data.directorys;

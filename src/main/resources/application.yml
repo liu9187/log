@@ -5,3 +5,11 @@ server:
 spring:
     thymeleaf:
       cache: false
+## 自己的日志
+#logging:
+#  file: test.log
+#  path: logs
+
+logView:
+  username: admin
+  password: admin123
