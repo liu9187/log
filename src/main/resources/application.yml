@@ -12,4 +12,7 @@ spring:
 
 logView:
   username: admin
-  password: admin123
+  password: 123456
+  remoteIp: 127.0.0.1
+  remoteUserName: 111
+  remotePassWord: 222

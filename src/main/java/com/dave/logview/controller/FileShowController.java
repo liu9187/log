@@ -1,5 +1,6 @@
 package com.dave.logview.controller;
 
+import com.dave.logview.common.CommonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,7 @@ public class FileShowController {
         return listFile(pathDir);
     }
 
-    private Object listFile(String filedir) {
+    private CommonResult listFile(String filedir) {
         Map<String, Object> result = new HashMap<>();
         List<String> directorys = new ArrayList<>();
         List<String> files = new ArrayList<>();
@@ -66,12 +67,12 @@ public class FileShowController {
             logger.info("目标路径：" + filedir + ",遍历完成!");
         } catch (Exception e) {
             logger.error("遍历失败:" + e.getMessage(), e);
+            return CommonResult.error(e.getMessage());
         }
-        //路径不管是不是报错还是给他
         result.put("files", files);
         result.put("directorys", directorys);
         result.put("pwd", filedir);
-        return result;
+        return CommonResult.success(result);
     }
 
 }

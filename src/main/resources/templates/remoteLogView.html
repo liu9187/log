@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>外网测试服务器</title>
+    <title>内网测试服务器</title>
     <link rel="stylesheet" href="/logView/layui/css/layui.css" media="all">
     <style>
         html, body {
@@ -70,7 +70,7 @@
         }
 
         //文件刷新
-        listFilePost("/logView/fileShow/listRoot");
+        listFilePost("/logView/remoteFileShow/listRoot");
 
         $('#back').on('click', function () {
             var pwd = $('#pwd').val();
@@ -90,7 +90,7 @@
             var pwd = $('#pwd').val();
             var params = {};
             params.pathDir = pwd;
-            listFilePost("/logView/fileShow/listDir", params);
+            listFilePost("/logView/remoteFileShow/listDir", params);
         });
 
 
@@ -98,6 +98,8 @@
             var filePathName = $('#filePathName')[0].value;
             if (filePathName != "" && filePathName != undefined) {
                 open(filePathName);
+            } else {
+                layer.msg("请输入查看文件");
             }
         });
 
@@ -112,12 +114,13 @@
             }
         });
 
+
         function open(filePathName) {
             if ('WebSocket' in window) {
                 if (websocket != null) {
                     websocket.close();
                 }
-                var url = 'ws://127.0.0.1/logView/localLog?filePathName=' + filePathName;
+                var url = 'ws://127.0.0.1:7003/logView/remoteLog?filePathName=' + filePathName;
                 websocket = new WebSocket(url);
                 websocket.onmessage = function (event) {
                     // 接收服务端的实时日志并添加到HTML页面中
@@ -144,7 +147,6 @@
 
         $('#clear').on('click', function () {
             $("#log-container div").html('');
-            ;
             return false;
         });
     });
@@ -167,7 +169,7 @@
         } else {
             params.pathDir = pwd + '/' + e.text;
         }
-        listFilePost("/logView/fileShow/listDir", params);
+        listFilePost("/logView/remoteFileShow/listDir", params);
     }
 
     function listFilePost(url, params) {

@@ -3,26 +3,27 @@ package com.dave.logview.websocket;
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
+import com.dave.logview.config.LogViewConfig;
 import com.dave.logview.thread.TailLogThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnOpen;
+import javax.websocket.server.ServerEndpoint;
 import java.io.InputStream;
+import java.util.List;
 
 
 /**
  * wwj
  * 2018/8/24  17:56
- * 远程 SSH 访问日志的功能不弄了
- *   因为有了服务器的密码 我就可以直接连了
- *   就是因为没有服务器访问的权限还要看日志的情况下，才做这个功能
+ * 远程SSH
  */
-
-//@Component
-//@ServerEndpoint("/remoteLog")
+@Component
+@ServerEndpoint("/remoteLog")
 public class RemoteWebSocketHandle {
 
     private static Logger logger = LoggerFactory.getLogger(RemoteWebSocketHandle.class);
@@ -31,17 +32,21 @@ public class RemoteWebSocketHandle {
 
     private Connection conn = null;
 
+    private final int port = 22;
+
     /**
      * 新的WebSocket请求开启
      */
     @OnOpen
     public void onOpen(javax.websocket.Session session) {
         try {
-            /** */
-            String hostname = "";
-            int port = 22;
-            String username = "";
-            String password = "";
+            List<String> listMap = session.getRequestParameterMap().get("filePathName");
+            String filePathName = listMap.get(0);
+
+            /** 服务器参数 */
+            String hostname = LogViewConfig.remoteIp;
+            String username = LogViewConfig.remoteUserName;
+            String password = LogViewConfig.remotePassWord;
 
             conn = new Connection(hostname, port);
             //连接到主机
@@ -53,7 +58,7 @@ public class RemoteWebSocketHandle {
             } else {
                 session.getBasicRemote().sendText(hostname + "：连接成功!" + "<br>");
                 ssh = conn.openSession();
-                ssh.execCommand("tail -f "+"");
+                ssh.execCommand("tail -f " + filePathName);
                 InputStream inputStream = new StreamGobbler(ssh.getStdout());
                 TailLogThread thread = new TailLogThread(inputStream, session);
                 thread.start();
@@ -67,6 +72,7 @@ public class RemoteWebSocketHandle {
             }
         }
     }
+
 
     @OnClose
     public void onClose() {
@@ -86,5 +92,4 @@ public class RemoteWebSocketHandle {
     public void onError(Throwable thr) {
         logger.error(thr.getMessage(), thr);
     }
-
 }

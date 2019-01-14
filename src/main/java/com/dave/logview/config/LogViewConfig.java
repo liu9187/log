@@ -17,6 +17,16 @@ public class LogViewConfig {
     @Value("${logView.password}")
     private String password;
 
+    //200 服务器
+
+    public static String remoteIp;
+
+
+    public static String remoteUserName;
+
+
+    public static String remotePassWord;
+
     public String getUsername() {
         return username;
     }
@@ -31,5 +41,32 @@ public class LogViewConfig {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRemoteIp() {
+        return remoteIp;
+    }
+
+    @Value("${logView.remoteIp}")
+    public void setRemoteIp(String remoteIp) {
+        this.remoteIp = remoteIp;
+    }
+
+    public String getRemoteUserName() {
+        return remoteUserName;
+    }
+
+    @Value("${logView.remoteUserName}")
+    public void setRemoteUserName(String remoteUserName) {
+        this.remoteUserName = remoteUserName;
+    }
+
+    public String getRemotePassWord() {
+        return remotePassWord;
+    }
+
+    @Value("${logView.remotePassWord}")
+    public void setRemotePassWord(String remotePassWord) {
+        this.remotePassWord = remotePassWord;
     }
 }

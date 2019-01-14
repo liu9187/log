@@ -11,7 +11,7 @@
 <body>
 <div class="m-login-bg">
     <div class="m-login">
-        <h3>宁波日志系统登录</h3>
+        <h3>日志系统登录</h3>
         <div class="m-login-warp">
             <form class="layui-form">
                 <div class="layui-form-item">
@@ -25,7 +25,7 @@
                         <input type="text" name="verity" required lay-verify="required" placeholder="验证码" autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-inline">
-                        <img class="verifyImg" onclick="this.src=this.src+'?c='+Math.random();" src="/logView/images/login/yzm.jpg"/>
+                        <img id="verifyImg" src="" alt="更换验证码" height="100%" width="100%" onclick="getVerify(this);">
                     </div>
                 </div>
                 <div class="layui-form-item m-login-btn">
@@ -38,7 +38,7 @@
                 </div>
             </form>
         </div>
-        <p class="copyright">Copyright 医保通</p>
+        <p class="copyright">Copyright logView</p>
     </div>
 </div>
 <script src="/logView/layui/layui.js" type="text/javascript" charset="utf-8"></script>
@@ -52,7 +52,8 @@
         } else {
             layer.alert("浏览器不支持localStorage");
         }
-
+        //验证码
+        $('#verifyImg')[0].src = "/logView/createCode?key=" + guid();
 
         //自定义验证规则
         form.verify({
@@ -86,8 +87,20 @@
             });
             return false;
         });
-
     });
+
+    function getVerify(obj) {
+        obj.src = "/logView/createCode?key=" + guid();
+    }
+
+    //用于生成uuid
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+
+    function guid() {
+        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+    }
 </script>
 </body>
 </html>

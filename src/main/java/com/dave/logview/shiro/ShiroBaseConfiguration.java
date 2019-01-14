@@ -34,6 +34,7 @@ public class ShiroBaseConfiguration {
         Map<String, String> map = new HashMap<>();
         //登出
         map.put("/login", "anon");
+        map.put("/createCode", "anon");
         //静态资源
         map.put("/css/**", "anon");
         map.put("/fonts/**", "anon");

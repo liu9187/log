@@ -170,9 +170,13 @@
 
     function listFilePost(url, params) {
         $.post(url, params, function (data) {
-            $('#pwd').val(data.pwd);
-            var files = data.files;
-            var directorys = data.directorys;
+            if(data.code != 200){
+                layer.alert(data.msg);
+                return;
+            }
+            $('#pwd').val(data.data.pwd);
+            var files = data.data.files;
+            var directorys = data.data.directorys;
             $("#fileList").html('');
             files.forEach(function (value, i) {
                 if (i == 0) {

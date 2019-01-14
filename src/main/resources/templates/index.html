@@ -15,7 +15,7 @@
     <div class="layui-row layui-col-space15" style="text-align:center">
         <div class="layui-col-md6">
             <div class="layui-card">
-                <div class="layui-card-header">测试DMZ日志访问(122)</div>
+                <div class="layui-card-header">本机服务器日志访问</div>
                 <div class="layui-card-body">
                     <img src="/logView/images/index/left.jpg"/><br>
                     <button id="left" class="layui-btn" style="width: 198px">进入</button>
@@ -24,7 +24,7 @@
         </div>
         <div class="layui-col-md6">
             <div class="layui-card">
-                <div class="layui-card-header">测试内网日志访问(200)</div>
+                <div class="layui-card-header">远程服务器日志访问</div>
                 <div class="layui-card-body">
                     <img src="/logView/images/index/right.jpg"/><br>
                     <button id="right" class="layui-btn" style="width: 198px">进入</button>
@@ -109,7 +109,7 @@
         }
 
         function playerJump(value) {
-        //
+            //
         }
 
         function _drawPlayer() {
@@ -171,18 +171,14 @@
                 player.stop = false;
                 playerAction(d);
             });
-        })({width:window.screen.width-10, height: 130});
+        })({width: window.screen.width - 10, height: 130});
     })();
 
-    $("#left").click(function(){
+    $("#left").click(function () {
         window.location.href = "/logView/view";
     });
-    $("#right").click(function(){
-        // window.location.href = "/logView/index";
-        alert("还没开发完毕！");
+    $("#right").click(function () {
+        window.location.href = "/logView/remoteView";
     });
-
-
-
 </script>
 </html>
